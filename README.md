@@ -39,5 +39,36 @@ multiqc .  --export csv
 ## Step Three:  Analyzing nuclear data
 Depencencies required: HybPiper (https://github.com/mossmatters/HybPiper/wiki), raxml (https://github.com/amkozlov/raxml-ng/wiki), Astral (https://github.com/smirarab/ASTRAL), figtree (https://tree.bio.ed.ac.uk/software/figtree/)
 The first thing to do is installing Hybpiper and preparing files. More information on how to use Hybpiper and try with sample data can be found on: (https://github.com/mossmatters/HybPiper/wiki/Tutorial)
+I recommend creating a new directory with the following : 
+1. Trimmed fastq files (one forward one reverse for each sample). Example format: name*_2_trimmed_noAdapters.fastq and name*_2_trimmed_noAdapters.fastq
+2. A namelist.txt file that you can create with the following command:
+```
+ls *_trimmed_noAdapters.fastq | sed 's/\(_[12]_trimmed_noAdapters\.fastq\)//' | sort -u > namelist.txt
+```
+3. A targetfile. My target Astragalus_targefile.fasta is available to download from this repository. 
 
+### a) First hypiper command: nuclear assembly. 
+The following code is for the hybpiper assembly: 
+```
+while read name; 
+do hybpiper assemble -t_dna Astragalus_targetfile.fasta -r $name_1_trimmed.fastq $name_2_trimmed.fastq  --prefix $name --bwa;
+done < namelist.txt
+```
+### b) Second hyhbpiper command: creating a stats summary 
+By running the following command, you will generate a stats table with information such as number of reads, reads mapped, total bases recovered, etc: 
+```
+hybpiper stats -t_dna Astragalus_targetfile.fasta gene namelist.txt
+```
+
+### c) Third hybpiper command : visualizing results 
+The following command takes the stats summary from b) and creates a visual summary/heatmap showing the gene recovery for each gene within each sample
+```
+hybpiper recovery_heatmap seq_lengths.tsv
+```
+
+### d) Fourth hybpiper command: retrieving sequences 
+Parameters can be changed in the following command based on whether the user wants to retrieve gene or supercontig (might include more information about the flanking regions). Generally, people retrieve the genes 
+```
+hybpiper retrieve_sequences dna -t_dna Astragalus_targetfile.fasta --sample_names namelist.txt
+```
 
