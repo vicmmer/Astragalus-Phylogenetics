@@ -7,7 +7,7 @@ Project code: PRJNA1108222
 Download link: https://www.ncbi.nlm.nih.gov/sra/PRJNA1108222
 
 ## Step One: Trimming Reads
-Dependencies required: Trimmomatic 
+Dependencies required: Trimmomatic (https://github.com/usadellab/Trimmomatic)
 The following code was ran within a job file onto a server. It might be need to be modified for future users depending on whether they do it within a job file, on a server or locally. 
 
 ```
@@ -25,7 +25,7 @@ done
 
 
 ## Step Two: Looking at sequence quality
-Dependencies required: fastqc and multiqc. 
+Dependencies required: fastqc (https://github.com/s-andrews/FastQC) and multiqc (https://github.com/MultiQC/MultiQC)
 First, fastqc is run to get the quality of each sequence separately where the general command is: with $name being the name of each sample and _1 & _2 are the forward and reverse trimmed files 
 ```
 fastqc $name*_1_trimmed_noAdapters.fastq
