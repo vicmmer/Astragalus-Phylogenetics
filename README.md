@@ -38,6 +38,6 @@ multiqc .  --export csv
 
 ## Step Three:  Analyzing nuclear data
 Depencencies required: HybPiper (https://github.com/mossmatters/HybPiper/wiki), raxml (https://github.com/amkozlov/raxml-ng/wiki), Astral (https://github.com/smirarab/ASTRAL), figtree (https://tree.bio.ed.ac.uk/software/figtree/)
-### The first thing to do is installing Hybpiper and preparing files. More information can be found on: https://github.com/mossmatters/HybPiper/wiki
-multiqc .  --export csv
-```
+The first thing to do is installing Hybpiper and preparing files. More information on how to use Hybpiper and try with sample data can be found on: (https://github.com/mossmatters/HybPiper/wiki/Tutorial)
+
+
