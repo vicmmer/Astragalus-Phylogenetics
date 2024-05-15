@@ -96,3 +96,6 @@ The job file above was executed directly on the command line with the following 
 ```
 while read name; do   qsub -o $name.log raxml_all.job $name; done < genenamelist.txt\
 ```
+
+### Trim gene trees with TrimAL 
+
