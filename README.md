@@ -76,7 +76,39 @@ Analysing paralogs is important. Good practice is removing them from further ana
 ```
 hybpiper paralog_retriever namelist.txt -t_dna Astragalus_targetfile.fasta
 ```
-At this point, the hybpiper step is done, what comes next is to create gene trees for each of the genes (minus the paralogous genes). For this, I created an additional folder that contains the genes that are NOT found in the paralogs_above_threshold_report.txt file. Within this folder I will perform the following steps: 
+At this point, the hybpiper step is done, what comes next is to trim the gene files, and create gene trees for each of the genes (minus the paralogous genes). For this, I created an additional folder that contains the genes that are NOT found in the paralogs_above_threshold_report.txt file. Within this folder I will perform the following steps: 
+
+### Multiple sequence alignment with MAFFT 
+After filtering out the genes that were flagged paralogous, 
+
+### Trim gene trees with TrimAL 
+TrimAL (https://vicfero.github.io/trimal/) is another command line based tool that removes ambiguous, poorly aligned regions of the gene that might introduce noise and decrease the reliability of phylogenetic analysis. 
+I trimmed every single one of the recovered and aligned gene files from raxml using the following bash script: 
+```
+#!/bin/bash
+
+# Directory where your .aligned.fasta files are located
+input_dir="/mnt/c/Users/omatg/OneDrive/Desktop/trimal/Astragalus" #change to your directory
+
+output_dir="/mnt/c/Users/omatg/OneDrive/Desktop/trimal/Astragalus/trimal_output" #output directory 
+
+# Iterate over .aligned.fasta files in the directory
+for file in "$input_dir"/*.aligned.fasta; do
+    if [ -e "$file" ]; then
+        # Extract the gene name from the filename
+        gene_name=$(basename "$file" .aligned.fasta)
+
+        # Construct the paths for output files in the specified directory
+        output_fasta="${output_dir}/${gene_name}.aligned.trimmed.fasta"
+        output_html="${output_dir}/${gene_name}.aligned.trimmed.html"
+
+        # Run the trimal command and direct output to the specified paths
+        trimal -in "$file" -out "$output_fasta" -htmlout "$output_html" -automated1
+
+        echo "Processed $gene_name"
+    fi
+done
+```
 
 ### Create gene trees with raxml: 
 The code below is what I had on my raxml_all.job file which i executed with the following command
@@ -94,8 +126,10 @@ raxmlHPC -f a -x 12345 -p 12345 -# 1000 -m GTRGAMMA -s ${name}.aligned.trimmed.f
 ```
 The job file above was executed directly on the command line with the following command: 
 ```
-while read name; do   qsub -o $name.log raxml_all.job $name; done < genenamelist.txt\
+while read name; do   qsub -o $name.log raxml_all.job $name; done < genenamelist.txt
+#where genenamelist.txt is a text list containing all the genes that were kept after the paralog filtering
 ```
 
-### Trim gene trees with TrimAL 
+### Concatanate trees with Astral 
+For this step, I used the output gene files from trimal, 
 
