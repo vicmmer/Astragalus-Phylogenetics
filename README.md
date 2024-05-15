@@ -78,12 +78,12 @@ hybpiper paralog_retriever namelist.txt -t_dna Astragalus_targetfile.fasta
 ```
 At this point, the hybpiper step is done, what comes next is to trim the gene files, and create gene trees for each of the genes (minus the paralogous genes). For this, I created an additional folder that contains the genes that are NOT found in the paralogs_above_threshold_report.txt file. Within this folder I will perform the following steps: 
 
-### Multiple sequence alignment with MAFFT 
+### Step Four: Multiple sequence alignment with MAFFT 
 After filtering out the genes that were flagged paralogous, we need to align these recovered FNAs from each gene using the following command: 
 ```
 mafft --auto $1.FNA > $1.aligned.FNA
 ```
-### Trim gene trees with TrimAL 
+### Step FIve: Trim gene trees with TrimAL 
 TrimAL (https://vicfero.github.io/trimal/) is another command line based tool that removes ambiguous, poorly aligned regions of the gene that might introduce noise and decrease the reliability of phylogenetic analysis. 
 I trimmed every single one of the recovered and aligned gene files from mafft using the following bash script: 
 ```
@@ -112,7 +112,7 @@ for file in "$input_dir"/*.aligned.fasta; do
 done
 ```
 
-### Create gene trees with raxml: 
+### Step Six: Create gene trees with raxml: 
 After aligning, and trimming, we are ready to make gene trees. The code below is what I had on my raxml_all.job file which i executed with the following command
 
 ```
@@ -131,14 +131,16 @@ The job file above was executed directly on the command line with the following 
 while read name; do   qsub -o $name.log raxml_all.job $name; done < genenamelist.txt
 #where genenamelist.txt is a text list containing all the genes that were kept after the paralog filtering
 ```
-### Concatanate all species trees into one file: 
+### Step 7: Concatanate all species trees into one file: 
 Astral in the next step, will analyze all the gene trees and create a species tree using that data. but first we need to concatante these files into one using: 
 ```
 cat *output_tree > concatenated_trees.tre
 ```
-### Concatanate trees with Astral 
+### Step 8: Concatanate trees with Astral 
 Astral will generate a species tree. Use following code: 
 ```
 java -jar astral.5.7.8.jar -i concatenated_trees.tre -o astragalus.astral_consensus.tre
 ```
+
+### Step 9: Visualizing tree: FigTree
 
