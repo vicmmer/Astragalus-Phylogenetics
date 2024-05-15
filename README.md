@@ -72,3 +72,27 @@ Parameters can be changed in the following command based on whether the user wan
 hybpiper retrieve_sequences dna -t_dna Astragalus_targetfile.fasta --sample_names namelist.txt
 ```
 ### e) Fifth hybpiper command: retrieving paralogs 
+Analysing paralogs is important. Good practice is removing them from further analysis, which I did. I retrieved and recognized 145 paralogs using the following command: 
+```
+hybpiper paralog_retriever namelist.txt -t_dna Astragalus_targetfile.fasta
+```
+At this point, the hybpiper step is done, what comes next is to create gene trees for each of the genes (minus the paralogous genes). For this, I created an additional folder that contains the genes that are NOT found in the paralogs_above_threshold_report.txt file. Within this folder I will perform the following steps: 
+
+### Create gene trees with raxml: 
+The code below is what I had on my raxml_all.job file which i executed with the following command
+
+```
+name=$1
+
+raxmlHPC -f a -x 12345 -p 12345 -# 1000 -m GTRGAMMA -s ${name}.aligned.trimmed.fasta -n ${name}_output_tree
+#Paramatere explanation:
+#-f a : tells RAxML to conduct a rapid bootstrap analysis and search for the best scoring ML tree in one run
+#-x 12345: sets the random number seed for bootstra analysis and ensures that bootstrap sampling is reproducible
+#-p 12345: sets another random seed that allows the program to start tree inference from a different initial tree for each new run.
+# -# 1000: specified boostrap replicates
+#-m GTRGAMMA: selects model of nucleotido or amino acid substitution and the rate heterogeneity model 
+```
+The job file above was executed directly on the command line with the following command: 
+```
+while read name; do   qsub -o $name.log raxml_all.job $name; done < genenamelist.txt\
+```
