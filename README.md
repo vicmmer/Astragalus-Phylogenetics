@@ -71,4 +71,4 @@ Parameters can be changed in the following command based on whether the user wan
 ```
 hybpiper retrieve_sequences dna -t_dna Astragalus_targetfile.fasta --sample_names namelist.txt
 ```
-
+### e) Fifth hybpiper command: retrieving paralogs 
