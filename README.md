@@ -143,4 +143,7 @@ java -jar astral.5.7.8.jar -i concatenated_trees.tre -o astragalus.astral_consen
 ```
 
 ### Step 9: Visualizing tree: FigTree
+FigTree is a GUI where you can upload a tree file in .tre format or other formats as well. You can do things such as rerooting, and rotating branches to make it more visually appealing, of course withou changing the inherent structure and relationships of the tree. This is what it looks like: 
+![image](https://github.com/vicmmer/Astragalus-Phylogenetics/assets/65916041/06c9235a-4159-46d7-9413-d38579548791)
+
 
